@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+</head>
+
+<body>
+    <script>
+        var temp = [{
+                "temperature": 14,
+                "sales": 120
+            }, {
+                "temperature": 16.4,
+                "sales": 208
+            }, {
+                "temperature": 15.2,
+                "sales": 310
+            }, {
+                "temperature": 21.1,
+                "sales": 320
+            },
+            {
+                "temperature": 18.9,
+                "sales": 510
+            }, {
+                "temperature": 24.8,
+                "sales": 400
+            },
+            {
+                "temperature": 19,
+                "sales": 403
+            },
+            {
+                "temperature": 10,
+                "sales": 600
+            }
+        ]
+        width = 600
+        height = 600
+        // append the svg object to the body of the page
+        let svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .style("background", "pink")
+            .append("g")
+            .attr("transform", "translate(" + 120 / 2 + "," + 120 / 2 + ")")
+
+
+        // for creating scale x or y
+
+        let xScale = d3.scaleLinear()
+            .domain([d3.min(temp, (d) => {
+                    // console.log(d.temperature-1);
+                    return d.temperature - 1
+                }),
+                d3.max(temp, (d) => {
+                    // console.log(d.temperature+1);
+                    return d.temperature + 1
+                })
+            ])
+            .range([0, width - 120])
+
+        let yScale = d3.scaleLinear()
+            .domain([0, d3.max(temp, (d) => {
+                return d.sales
+                // console.log(d.sales);
+            })])
+            .range([height - 120, 0])
+
+        // creating axis x or y 
+        let xAxis = d3.axisBottom(xScale);
+        let yAxis = d3.axisLeft(yScale)
+
+        svg.append("g")
+            //  translate and transfor for x axis  
+            .attr("transform", "translate(0," + (height - 120) + ")")
+            .call(xAxis)
+        svg.append("g").call(yAxis)
+
+
+        // for dots  on axis
+        let dots = svg.append("g").selectAll("dot")
+            .data(temp);
+        dots.enter()
+            .append("circle")
+            .attr("cx", (d) => {
+                return (xScale(d.temperature))
+            })
+            .attr("cy", (d) => {
+                return (yScale(d.sales))
+            })
+            .attr("r", 5)
+            .style("fill", "black")
+
+            
+    </script>
+
+</body>
+
+</html>
